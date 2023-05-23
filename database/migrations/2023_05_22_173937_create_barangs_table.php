@@ -20,6 +20,7 @@ class CreateBarangsTable extends Migration
             $table->integer('kategori_id');
             $table->integer('harga_beli')->default(0);
             $table->integer('harga_jual')->default(0);
+            $table->integer('penggunaan_tahun')->default(0);
             $table->integer('stok')->default(0);
             $table->integer('safety_stok')->default(0);
             $table->integer('eoq')->default(0);
