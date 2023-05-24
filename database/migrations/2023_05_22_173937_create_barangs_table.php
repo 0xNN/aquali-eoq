@@ -24,6 +24,7 @@ class CreateBarangsTable extends Migration
             $table->integer('stok')->default(0);
             $table->integer('safety_stok')->default(0);
             $table->integer('eoq')->default(0);
+            $table->integer('rop')->default(0);
             $table->string('gambar', 100)->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();

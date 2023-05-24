@@ -2,6 +2,14 @@
 
 @section('content')
     <div class="container-fluid">
+        @foreach ($barang as $item)
+            @if ($item->stok <= $item->eoq)
+                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    <strong>{{ $item->nama_barang }}</strong> stoknya sudah di bawah EOQ, silahkan lakukan pembelian
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        @endforeach
         <div class="card">
             <div class="card-header">
                 <button class="btn btn-sm btn-success" id="btnAdd" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -16,8 +24,10 @@
                             <th>Kode</th>
                             <th>Nama Barang</th>
                             <th>Kategori</th>
-                            <th>Stok</th>
+                            {{-- <th>Stok</th> --}}
                             <th>EOQ</th>
+                            <th>EOQ (capaian)</th>
+                            <th>EOQ (sisa)</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -136,12 +146,16 @@
                                     <td id="stok_detail"></td>
                                 </tr>
                                 <tr>
+                                    <th>Economic Order Quantity (EOQ)</th>
+                                    <td id="eoq_detail"></td>
+                                </tr>
+                                <tr>
                                     <th>Safety Stok</th>
                                     <td id="safety_stok_detail"></td>
                                 </tr>
                                 <tr>
-                                    <th>Economic Order Quantity (EOQ)</th>
-                                    <td id="eoq_detail"></td>
+                                    <th>Reorder point (ROP)</th>
+                                    <td id="rop_detail"></td>
                                 </tr>
                                 <tr>
                                     <th>Keterangan</th>
@@ -198,13 +212,21 @@
                         data: 'kategori.nama_kategori',
                         name: 'kategori.nama_kategori'
                     },
-                    {
-                        data: 'stok',
-                        name: 'stok'
-                    },
+                    // {
+                    //     data: 'stok',
+                    //     name: 'stok'
+                    // },
                     {
                         data: 'eoq',
                         name: 'eoq'
+                    },
+                    {
+                        data: 'eoq_capaian',
+                        name: 'eoq_capaian'
+                    },
+                    {
+                        data: 'eoq_sisa',
+                        name: 'eoq_sisa'
                     },
                     {
                         data: 'action',
@@ -224,7 +246,7 @@
                     formData.append('harga_jual', $('#harga_jual').val());
                     formData.append('penggunaan_tahun', $('#penggunaan_tahun').val());
                     formData.append('stok', $('#stok').val());
-                    formData.append('safety_stok', $('#safety_stok').val());
+                    // formData.append('safety_stok', $('#safety_stok').val());
                     if ($('#gambar')[0].files[0] != undefined) {
                         formData.append('gambar', $('#gambar')[0].files[0]);
                     }
@@ -295,7 +317,7 @@
                         $('#harga_jual').val(response.data.harga_jual);
                         $('#penggunaan_tahun').val(response.data.penggunaan_tahun);
                         $('#stok').val(response.data.stok);
-                        $('#safety_stok').val(response.data.safety_stok);
+                        // $('#safety_stok').val(response.data.safety_stok);
                         $('#keterangan').val(response.data.keterangan);
                         $('#btnSimpan').html('Update');
                         $('#exampleModal').modal('show');
@@ -362,10 +384,11 @@
                         $('#harga_jual_detail').html(response.data.harga_jual);
                         $('#penggunaan_tahun_detail').html(response.data.penggunaan_tahun);
                         $('#stok_detail').html(response.data.stok);
-                        $('#safety_stok_detail').html(response.data.safety_stok);
                         $('#eoq_detail').html(`
-                            <span class="badge rounded-pill bg-success">${response.data.eoq}</span>
+                        <span class="badge rounded-pill bg-success">${response.data.eoq}</span>
                         `);
+                        $('#safety_stok_detail').html(response.data.safety_stok);
+                        $('#rop_detail').html(response.data.rop);
                         $('#keterangan_detail').html(response.data.keterangan);
                         $('#imgDetail').attr('src', "{{ asset('images/uploads') }}" + '/' + response.data.gambar);
                         $('#modalDetail').modal('show');
@@ -432,12 +455,12 @@
             } else {
                 $('#stok').removeClass('is-invalid');
             }
-            if (safety_stok == '') {
-                $('#safety_stok').addClass('is-invalid');
-                return false;
-            } else {
-                $('#safety_stok').removeClass('is-invalid');
-            }
+            // if (safety_stok == '') {
+            //     $('#safety_stok').addClass('is-invalid');
+            //     return false;
+            // } else {
+            //     $('#safety_stok').removeClass('is-invalid');
+            // }
             return true;
         }
 

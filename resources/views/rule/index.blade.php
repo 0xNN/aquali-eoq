@@ -38,11 +38,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="biaya_pemesanan" class="form-label">Biaya Pemesanan*</label>
-                        <input type="number" class="form-control" name="biaya_pemesanan" id="biaya_pemesanan" placeholder="Masukan Biaya Pemesanan">
+                        <input type="number" class="form-control" name="biaya_pemesanan" id="biaya_pemesanan" placeholder="Persentase dari harga Barang. contoh 10%">
                     </div>
                     <div class="mb-3">
                         <label for="biaya_penyimpanan" class="form-label">Biaya Penyimpanan*</label>
-                        <input type="number" class="form-control" name="biaya_penyimpanan" id="biaya_penyimpanan" placeholder="Masukan Biaya Penyimpanan">
+                        <input type="number" class="form-control" name="biaya_penyimpanan" id="biaya_penyimpanan" placeholder="Persentase dari harga Barang. contoh 25%">
                     </div>
                     <div class="mb-3">
                         <label for="lead_time" class="form-label">Lead Time*</label>
