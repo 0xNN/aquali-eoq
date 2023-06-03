@@ -15,4 +15,9 @@ class Supplier extends Model
      * @var array
      */
     protected $guarded = [];
+
+    public function pembelian()
+    {
+        return $this->hasMany(Pembelian::class);
+    }
 }

@@ -43,21 +43,31 @@ class BarangController extends Controller
                 if($barang->kategori->is_eoq == 0) {
                     return '<span class="badge rounded-pill bg-danger">Not EOQ</span>';
                 }
-                return '<span class="badge rounded-pill bg-success">'.$barang->eoq.'</span>';
+                return '<span class="badge rounded-pill bg-success">'.number_format($barang->eoq,0,',','.') .'</span>';
             })
             ->editColumn('eoq_capaian', function($barang){
-                return '86';
+                if ($barang->kategori->is_eoq == 0) {
+                    return '-';
+                }
+                if ($barang->eoq != 0) {
+                    return round($barang->penggunaan_tahun / $barang->eoq, 0, PHP_ROUND_HALF_UP);
+                }
+                return 0;
             })
             ->editColumn('eoq_sisa', function($barang){
-                return '86';
+                if ($barang->kategori->is_eoq == 0) {
+                    return '-';
+                }
+                return round($barang->penggunaan_tahun / $barang->eoq, 0, PHP_ROUND_HALF_UP) - $barang->pembelianDetail->count();
             })
             ->addIndexColumn()
-            ->rawColumns(['action','kode_barang','eoq'])
+            ->rawColumns(['action','kode_barang','eoq','eoq_capaian','eoq_sisa'])
             ->make(true);
         }
         $kategori = Kategori::all();
         $barang = Barang::all();
-        return view("barang.index", compact("kategori","barang"));
+        $rule = Rule::all();
+        return view("barang.index", compact("kategori","barang","rule"));
     }
 
     public function store()
@@ -70,6 +80,7 @@ class BarangController extends Controller
             $barang->kode_barang = request()->kode_barang;
             $barang->nama_barang = request()->nama_barang;
             $barang->kategori_id = request()->kategori_id;
+            $barang->rule_id = request()->rule_id;
             $barang->harga_beli = request()->harga_beli;
             $barang->harga_jual = request()->harga_jual;
             $barang->penggunaan_tahun = request()->penggunaan_tahun;
@@ -89,7 +100,7 @@ class BarangController extends Controller
                 $barang->keterangan = request()->keterangan;
             }
 
-            $rule = Rule::orderByDesc('id')->first();
+            $rule = Rule::find(request()->rule_id);
             if ($barang->kategori->is_eoq == 1) {
                 // Proses EOQ
                 $r_eoq = ( 2 * $barang->penggunaan_tahun * (($rule->biaya_pemesanan/100) * $barang->harga_beli)) / (($rule->biaya_penyimpanan/100) * $barang->harga_beli);
@@ -143,6 +154,7 @@ class BarangController extends Controller
             $barang->kode_barang = request()->kode_barang;
             $barang->nama_barang = request()->nama_barang;
             $barang->kategori_id = request()->kategori_id;
+            $barang->rule_id = request()->rule_id;
             $barang->harga_beli = request()->harga_beli;
             $barang->harga_jual = request()->harga_jual;
             $barang->penggunaan_tahun = request()->penggunaan_tahun;
@@ -159,7 +171,7 @@ class BarangController extends Controller
             }
             if ($barang->kategori->is_eoq == 1) {
                 // Proses EOQ
-                $rule = Rule::orderByDesc('id')->first();
+                $rule = Rule::find(request()->rule_id);
                 $r_eoq = ( 2 * $barang->penggunaan_tahun * (($rule->biaya_pemesanan/100) * $barang->harga_beli)) / (($rule->biaya_penyimpanan/100) * $barang->harga_beli);
                 $barang->eoq = round(sqrt($r_eoq), 0, PHP_ROUND_HALF_UP);
             }

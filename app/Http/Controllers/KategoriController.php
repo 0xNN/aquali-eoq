@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kategori;
+use App\Models\Barang;
 use Exception;
 use DataTables;
 
@@ -39,7 +40,8 @@ class KategoriController extends Controller
             ->make(true);
         }
         $kategori = Kategori::all();
-        return view("kategori.index", compact("kategori"));
+        $barang = Barang::all();
+        return view("kategori.index", compact("kategori","barang"));
     }
 
     public function store()

@@ -18,6 +18,7 @@ class CreateBarangsTable extends Migration
             $table->string('kode_barang', 10);
             $table->string('nama_barang', 50);
             $table->integer('kategori_id');
+            $table->integer('rule_id');
             $table->integer('harga_beli')->default(0);
             $table->integer('harga_jual')->default(0);
             $table->integer('penggunaan_tahun')->default(0);

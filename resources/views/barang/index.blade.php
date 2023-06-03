@@ -2,14 +2,6 @@
 
 @section('content')
     <div class="container-fluid">
-        @foreach ($barang as $item)
-            @if ($item->stok <= $item->eoq)
-                <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                    <strong>{{ $item->nama_barang }}</strong> stoknya sudah di bawah EOQ, silahkan lakukan pembelian
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-        @endforeach
         <div class="card">
             <div class="card-header">
                 <button class="btn btn-sm btn-success" id="btnAdd" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -38,7 +30,7 @@
     </div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Form Data</h5>
@@ -67,6 +59,20 @@
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="rule_id" class="form-label">Rule*</label>
+                        @foreach ($rule as $item)
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="rule_id" data-id="{{ $item->id }}"
+                                    id="rule_id_{{ $item->id }}" value="{{ $item->id }}">
+                                <label class="form-check-label" for="rule_id">
+                                    Biaya Pemesanan: <span class="badge bg-primary">{{ $item->biaya_pemesanan }}</span> |
+                                    Biaya Penyimpanan: <span class="badge bg-primary">{{ $item->biaya_penyimpanan }}</span>
+                                    | Lead Time: <span class="badge bg-primary">{{ $item->lead_time }}</span>
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="mb-3">
                         <label for="harga_beli" class="form-label">Harga Beli*</label>
                         <input type="number" class="form-control" name="harga_beli" id="harga_beli"
                             placeholder="Masukan Harga Beli">
@@ -83,12 +89,13 @@
                     </div>
                     <div class="mb-3">
                         <label for="stok" class="form-label">Stok*</label>
-                        <input type="number" class="form-control" name="stok" id="stok" placeholder="Masukan Stok">
+                        <input type="number" class="form-control" name="stok" id="stok"
+                            placeholder="Masukan Stok">
                     </div>
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="safety_stok" class="form-label">Safety Stok*</label>
                         <input type="number" class="form-control" name="safety_stok" id="safety_stok" placeholder="Masukan Safety Stok">
-                    </div>
+                    </div> --}}
                     <div class="mb-3">
                         <label for="gambar" class="form-label">Gambar</label>
                         <input type="file" class="form-control" name="gambar" id="gambar">
@@ -99,7 +106,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btnClose" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" id="btnClose"
+                        data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="btnSimpan">Simpan</button>
                 </div>
             </div>
@@ -113,7 +121,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <img src="" alt="" id="imgDetail" class="img-fluid">
+                            <img src="" alt="" id="imgDetail" width="30%" class="img-fluid">
                         </div>
                         <div class="col-12 mt-3">
                             <table class="table table-sm table-bordered" id="tableBarangDetail">
@@ -167,7 +175,8 @@
                 </div>
                 <div class="modal-footer">
                     {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
-                    <button type="button" class="btn btn-secondary" id="btnCloseDetail" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" id="btnCloseDetail"
+                        data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -242,6 +251,7 @@
                     formData.append('kode_barang', $('#kode_barang').val());
                     formData.append('nama_barang', $('#nama_barang').val());
                     formData.append('kategori_id', $('#kategori_id').val());
+                    formData.append('rule_id', $('input[name="rule_id"]:checked').val());
                     formData.append('harga_beli', $('#harga_beli').val());
                     formData.append('harga_jual', $('#harga_jual').val());
                     formData.append('penggunaan_tahun', $('#penggunaan_tahun').val());
@@ -310,9 +320,11 @@
                     url: "{{ url('barang') }}" + '/' + id + '/edit',
                     type: "GET",
                     success: function(response) {
+                        let rule_id = "rule_id_" + response.data.rule_id;
                         $('#kode_barang').val(response.data.kode_barang);
                         $('#nama_barang').val(response.data.nama_barang);
                         $('#kategori_id').val(response.data.kategori_id);
+                        $('#' + rule_id).prop('checked', true);
                         $('#harga_beli').val(response.data.harga_beli);
                         $('#harga_jual').val(response.data.harga_jual);
                         $('#penggunaan_tahun').val(response.data.penggunaan_tahun);
@@ -380,17 +392,26 @@
                         $('#kode_barang_detail').html(response.data.kode_barang);
                         $('#nama_barang_detail').html(response.data.nama_barang);
                         $('#kategori_detail').html(response.data.kategori.nama_kategori);
-                        $('#harga_beli_detail').html(response.data.harga_beli);
-                        $('#harga_jual_detail').html(response.data.harga_jual);
-                        $('#penggunaan_tahun_detail').html(response.data.penggunaan_tahun);
-                        $('#stok_detail').html(response.data.stok);
+                        $('#harga_beli_detail').html(formatRupiah(response.data.harga_beli,''));
+                        $('#harga_jual_detail').html(formatRupiah(response.data.harga_jual,''));
+                        $('#penggunaan_tahun_detail').html(formatRupiah(response.data.penggunaan_tahun,''));
+                        $('#stok_detail').html(formatRupiah(response.data.stok,''));
                         $('#eoq_detail').html(`
-                        <span class="badge rounded-pill bg-success">${response.data.eoq}</span>
+                        <span class="badge bg-success">${formatRupiah(response.data.eoq,'')}</span>
                         `);
-                        $('#safety_stok_detail').html(response.data.safety_stok);
-                        $('#rop_detail').html(response.data.rop);
+                        $('#safety_stok_detail').html(`
+                        <span class="badge bg-success">${formatRupiah(response.data.safety_stok,'')}</span>
+                        `);
+                        $('#rop_detail').html(`
+                        <span class="badge bg-success">${formatRupiah(response.data.rop,'')}</span>
+                        `);
                         $('#keterangan_detail').html(response.data.keterangan);
-                        $('#imgDetail').attr('src', "{{ asset('images/uploads') }}" + '/' + response.data.gambar);
+                        if (response.data.gambar == null) {
+                            $('#imgDetail').attr('src', "{{ asset('images/no-image.jpg') }}");
+                        } else {
+                            $('#imgDetail').attr('src', "{{ asset('images/uploads') }}" + '/' +
+                                response.data.gambar);
+                        }
                         $('#modalDetail').modal('show');
                     },
                     error: function(response) {
@@ -474,6 +495,25 @@
             $('#safety_stok').val('');
             $('#gambar').val('');
             $('#keterangan').val('');
+        }
+
+        /* Fungsi formatRupiah */
+        function formatRupiah(angka, prefix) {
+            angka = angka.toString();
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? '' + rupiah : '');
         }
     </script>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Rule;
+use App\Models\Barang;
 use DataTables;
 use Exception;
 
@@ -31,7 +32,8 @@ class RuleController extends Controller
             ->make(true);
         }
         $rule = Rule::all();
-        return view("rule.index", compact("rule"));
+        $barang = Barang::all();
+        return view("rule.index", compact("rule","barang"));
     }
 
     public function store()

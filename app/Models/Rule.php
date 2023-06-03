@@ -15,4 +15,9 @@ class Rule extends Model
      * @var array
      */
     protected $guarded = [];
+
+    public function barang()
+    {
+        return $this->hasOne(Barang::class);
+    }
 }

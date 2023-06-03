@@ -20,4 +20,29 @@ class Barang extends Model
     {
         return $this->belongsTo(Kategori::class);
     }
+
+    public function rule()
+    {
+        return $this->belongsTo(Rule::class);
+    }
+
+    public function pembelianDetail()
+    {
+        return $this->hasMany(PembelianDetail::class);
+    }
+
+    public function barangMasuk()
+    {
+        return $this->hasMany(BarangMasuk::class);
+    }
+
+    public function permintaanDetail()
+    {
+        return $this->hasMany(PermintaanDetail::class);
+    }
+
+    public function distribusi()
+    {
+        return $this->hasMany(Distribusi::class);
+    }
 }

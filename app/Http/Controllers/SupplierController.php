@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use App\Models\Barang;
 use DataTables;
 use Exception;
 
@@ -34,7 +35,8 @@ class SupplierController extends Controller
             ->make(true);
         }
         $supplier = Supplier::all();
-        return view("supplier.index", compact("supplier"));
+        $barang = Barang::all();
+        return view("supplier.index", compact("supplier","barang"));
     }
 
     public function store()

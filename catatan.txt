@@ -1,10 +1,10 @@
-1 Barang 1 Rule
-Tabel barang relasi tabel rule
-ROP di modal detail
-format currency modal barang
-add span to safety stok & rop
-eoq sisa -1 setiap pembelian (untuk setiap barang)
-eoq initial = adalah penggunaan_tahun / eoq
+1 Barang 1 Rule => done
+Tabel barang relasi tabel rule => done
+ROP di modal detail => done
+format currency modal barang => done
+add span to safety stok & rop => done
+eoq sisa -1 setiap pembelian (untuk setiap barang) => done
+eoq capaian = adalah penggunaan_tahun / eoq => done
 user role (3 user + admin)
 (user produksi) permintaan barang ke gudang
 (user gudang) melihat permintaan
