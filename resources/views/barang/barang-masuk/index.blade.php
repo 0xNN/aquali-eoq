@@ -25,7 +25,8 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -48,19 +49,19 @@
                         <label for="barang_id" class="form-label">Kode Barang*</label>
                         <select class="form-select" name="barang_id" id="barang_id">
                             @foreach ($barang as $item)
-                                <option value="{{ $item->id }}">{{ $item->kode_barang }} - {{ $item->nama_barang }}</option>
+                                <option value="{{ $item->id }}">{{ $item->kode_barang }} - {{ $item->nama_barang }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="jumlah" class="form-label">Jumlah*</label>
                         <input type="number" class="form-control" name="jumlah" id="jumlah"
-                            placeholder="Masukan Jumlah">
+                            placeholder="Masukan Jumlah" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btnClose"
-                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" id="btnClose" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="btnSimpan">Simpan</button>
                 </div>
             </div>
@@ -184,6 +185,18 @@
                     },
                 ]
             });
+
+            $('#barang_id').click(function() {
+                let id = $(this).val();
+                let url = "{{ url('barang') }}" + '/' + id;
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    success: function(data) {
+                        $('#jumlah').val(data.data.eoq);
+                    }
+                });
+            })
 
             $('#btnSimpan').click(function() {
                 if (validate()) {
@@ -323,9 +336,9 @@
                         $('#nama_barang_detail').html(response.data.nama_barang);
                         $('#kategori_detail').html(response.data.kategori.nama_kategori);
                         $('#harga_beli_detail').html(formatRupiah(response.data.harga_beli,
-                        ''));
+                            ''));
                         $('#harga_jual_detail').html(formatRupiah(response.data.harga_jual,
-                        ''));
+                            ''));
                         $('#penggunaan_tahun_detail').html(formatRupiah(response.data
                             .penggunaan_tahun, ''));
                         $('#stok_detail').html(formatRupiah(response.data.stok, ''));

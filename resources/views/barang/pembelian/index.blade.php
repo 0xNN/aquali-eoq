@@ -241,7 +241,7 @@
                                             <td>${data.data.kode_barang}</td>
                                             <td>${data.data.nama_barang}</td>
                                             <td>${data.data.harga_beli}</td>
-                                            <td><input type="number" class="form-control form-control-sm" name="jumlah" id="jumlah_${data.data.id}"></td>
+                                            <td><input type="number" class="form-control form-control-sm" name="jumlah" value="${data.data.eoq}" id="jumlah_${data.data.id}" readonly></td>
                                         </tr>`;
                             $('#tableBarang tbody').append(html);
                         }

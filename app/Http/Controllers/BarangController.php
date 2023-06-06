@@ -58,7 +58,14 @@ class BarangController extends Controller
                 if ($barang->kategori->is_eoq == 0) {
                     return '-';
                 }
-                return round($barang->penggunaan_tahun / $barang->eoq, 0, PHP_ROUND_HALF_UP) - $barang->pembelianDetail->count();
+                $count = 0;
+                $pembelianDetail = $barang->pembelianDetail;
+                foreach($pembelianDetail as $pd){
+                    if ($pd->pembelian->status_permintaan == 1) {
+                        $count++;
+                    }
+                }
+                return round($barang->penggunaan_tahun / $barang->eoq, 0, PHP_ROUND_HALF_UP) - $count;
             })
             ->addIndexColumn()
             ->rawColumns(['action','kode_barang','eoq','eoq_capaian','eoq_sisa'])

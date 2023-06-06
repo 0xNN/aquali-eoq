@@ -128,10 +128,6 @@
                     </li>
                 @endif
                 @if (auth()->user()->role == 'gudang')
-                    <li class="nav-small-cap">
-                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">Transaksi</span>
-                    </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="{{ route('barang_masuk.index') }}" aria-expanded="false">
                             <span>

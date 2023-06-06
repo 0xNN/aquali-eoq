@@ -1,0 +1,4 @@
+di menu pembelian auto ambil eoq ketika pembelian. => done
+di menu barang masuk jumlah barang masuk disamakan dengan eoq. => done
+di menu barang eoq sisa harus berupa pembelian yang diterima bukan ditolak. => done
+di user gudang barang masuk te double di transaksi => done
