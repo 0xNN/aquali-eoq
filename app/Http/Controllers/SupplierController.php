@@ -119,6 +119,9 @@ class SupplierController extends Controller
             if ($supplier == null) {
                 throw new Exception("Supplier tidak ditemukan");
             }
+            if ($supplier->pembelian->count() > 0) {
+                throw new Exception("Supplier masih memiliki pembelian");
+            }
             $supplier->delete();
 
             return response()->json([
