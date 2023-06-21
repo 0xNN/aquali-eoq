@@ -46,6 +46,9 @@ class PembelianController extends Controller
                 return "<a href='javascript:void(0)' data-id='".$pembelian->id."' class='btn btnStatus btn-sm btn-info'>".$pembelian->kode_pembelian."</a>";
             })
             ->editColumn('supplier_id', function($pembelian){
+                if ($pembelian->supplier == null) {
+                    return "-";
+                }
                 return $pembelian->supplier->nama_supplier;
             })
             ->editColumn('status_permintaan', function($pembelian){
