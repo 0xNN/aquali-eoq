@@ -20,6 +20,7 @@
                             <th>EOQ</th>
                             <th>EOQ (capaian)</th>
                             <th>EOQ (sisa)</th>
+                            <th>EOQ (tercapai)</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -236,6 +237,10 @@
                     {
                         data: 'eoq_sisa',
                         name: 'eoq_sisa'
+                    },
+                    {
+                        data: 'eoq_tercapai',
+                        name: 'eoq_tercapai'
                     },
                     {
                         data: 'action',
